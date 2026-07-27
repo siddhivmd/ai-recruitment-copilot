@@ -4,3 +4,5 @@ langgraph
 pydantic
 python-dotenv
 mcp
+langchain-groq
+langchain-mcp-adapters
