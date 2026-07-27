@@ -27,7 +27,6 @@ async def query_candidates(question: str):
                 for call in response.tool_calls:
                     tool = next(t for t in tools if t.name == call["name"])
                     result = await tool.ainvoke(call["args"])
-                    print(f"Tool '{call['name']}' returned:", result)
                     return result
             return response.content
 

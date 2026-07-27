@@ -6,10 +6,10 @@ from graph.nodes import (
     shortlist_node,
     reject_node,
     review_node,
+    lookup_similar_candidates_node,
 )
 
 def route_decision(state: RecruitmentState) -> str:
-    """Decides which node to go to next, based on the match score."""
     score = state["match_result"]["match_score_percent"]
     if score >= 70:
         return "shortlist"
@@ -23,15 +23,17 @@ def build_graph():
 
     graph.add_node("parse_resume", parse_resume_node)
     graph.add_node("match", match_node)
+    graph.add_node("lookup_similar", lookup_similar_candidates_node)
     graph.add_node("shortlist", shortlist_node)
     graph.add_node("reject", reject_node)
     graph.add_node("review", review_node)
 
     graph.set_entry_point("parse_resume")
     graph.add_edge("parse_resume", "match")
+    graph.add_edge("match", "lookup_similar")
 
     graph.add_conditional_edges(
-        "match",
+        "lookup_similar",
         route_decision,
         {
             "shortlist": "shortlist",
