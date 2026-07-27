@@ -1,3 +1,4 @@
+import asyncio
 from graph.workflow import build_graph
 
 app = build_graph()
@@ -9,21 +10,17 @@ Skills: Python, Docker, AWS, Kubernetes.
 Education: B.Tech Computer Science, IIT Bombay.
 """
 
-weak_candidate = """
-Raj Patel | raj.patel@email.com
-1 year experience as a junior marketing associate.
-Skills: Excel, PowerPoint.
-Education: BBA.
-"""
+async def main():
+    result = await app.ainvoke({
+        "resume_text": strong_candidate,
+        "job_description": "",
+        "candidate_skills": [],
+        "match_result": None,
+        "decision": None,
+        "similar_candidates": None,
+    })
+    print("Final decision:", result["decision"])
+    print("Similar candidates from MCP:", result["similar_candidates"])
 
 if __name__ == "__main__":
-    for label, resume in [("STRONG", strong_candidate), ("WEAK", weak_candidate)]:
-        print(f"\n--- {label} CANDIDATE ---")
-        result = app.invoke({
-            "resume_text": resume,
-            "job_description": "",
-            "candidate_skills": [],
-            "match_result": None,
-            "decision": None,
-        })
-        print("Final decision:", result["decision"])
+    asyncio.run(main())

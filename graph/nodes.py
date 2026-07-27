@@ -1,3 +1,4 @@
+from agents.candidate_lookup import query_candidates
 from agents.resume_parser import parse_resume
 from tools.matching import score_against_job_description
 from schemas.graph_state import RecruitmentState
@@ -29,4 +30,8 @@ def reject_node(state: RecruitmentState) -> RecruitmentState:
 def review_node(state: RecruitmentState) -> RecruitmentState:
     state["decision"] = "needs_human_review"
     print(f"🔍 Sent for manual review. Score: {state['match_result']['match_score_percent']}%")
+    return state
+async def lookup_similar_candidates_node(state: RecruitmentState) -> RecruitmentState:
+    result = await query_candidates("List all candidates in the database")
+    state["similar_candidates"] = result
     return state

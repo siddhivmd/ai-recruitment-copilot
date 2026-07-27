@@ -6,3 +6,4 @@ class RecruitmentState(TypedDict):
     candidate_skills: list[str]
     match_result: Optional[dict]
     decision: Optional[str]
+    similar_candidates: Optional[list]
