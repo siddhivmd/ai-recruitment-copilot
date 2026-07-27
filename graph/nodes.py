@@ -8,7 +8,7 @@ def parse_resume_node(state: RecruitmentState) -> RecruitmentState:
     return state
 
 def match_node(state: RecruitmentState) -> RecruitmentState:
-    required_skills = ["Python", "Docker", "AWS"]  # simplified for now
+    required_skills = ["Python", "Docker", "AWS"]
     result = score_against_job_description.invoke({
         "candidate_skills": state["candidate_skills"],
         "required_skills": required_skills,
@@ -16,7 +16,17 @@ def match_node(state: RecruitmentState) -> RecruitmentState:
     state["match_result"] = result
     return state
 
-def decision_node(state: RecruitmentState) -> RecruitmentState:
-    score = state["match_result"]["match_score_percent"]
-    state["decision"] = "shortlist" if score >= 50 else "reject"
+def shortlist_node(state: RecruitmentState) -> RecruitmentState:
+    state["decision"] = "shortlisted"
+    print(f"✅ Candidate shortlisted. Score: {state['match_result']['match_score_percent']}%")
+    return state
+
+def reject_node(state: RecruitmentState) -> RecruitmentState:
+    state["decision"] = "rejected"
+    print(f"❌ Candidate rejected. Score: {state['match_result']['match_score_percent']}%")
+    return state
+
+def review_node(state: RecruitmentState) -> RecruitmentState:
+    state["decision"] = "needs_human_review"
+    print(f"🔍 Sent for manual review. Score: {state['match_result']['match_score_percent']}%")
     return state
